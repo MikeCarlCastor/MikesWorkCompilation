@@ -1,3 +1,5 @@
+
+
 SELECT COUNT (*)
 FROM collision;
 
@@ -13,8 +15,21 @@ ADD CONSTRAINT collision_id PRIMARY KEY (collision_id);
     --Contributing Factor vehicle 1--
     SELECT DISTINCT(contributing_factor_vehicle_1)
     FROM collision
-    --Result: No mispelled words--
+    --Result: One misspelled, 1 null, 1 unspecified--
 
+        --clean data--
+        UPDATE collision
+        SET contributing_factor_vehicle_1='Illness'
+        WHERE contributing_factor_vehicle_1='Illnes'
+
+        --remove null--
+        DELETE FROM collision
+        WHERE contributing_factor_vehicle_1 IS NULL
+
+        --remove unspecified--
+        DELETE FROM collision
+        WHERE contributing_factor_vehicle_1 = 'Unspecified'
+   
     --I only checked these two columns because
     --they're the only columns that I'll be using
     --for my analysis with TEXT type
@@ -73,25 +88,8 @@ WHERE (collision IS NULL);
 --columns needed for analysis
 
 --check duplicates--
-SELECT collision_id,
-crash_date,
-crash_time,
-borough, 
-latitude,
-longitude,
-number_of_persons_injured,
-number_of_persons_killed,
-number_of_pedestrians_injured,
-number_of_pedestrians_killed,
-number_of_cyclist_injured,
-number_of_cyclist_killed,
-number_of_motorist_injured,
-number_of_motorist_killed
-contributing_factor_vehicle_1
+SELECT COUNT(DISTINCT collision_id)
 FROM collision
-GROUP BY 1
-HAVING COUNT(collision)>1
-limit 10;
 --Result: No duplicates--
 
 --3--check outliers--
